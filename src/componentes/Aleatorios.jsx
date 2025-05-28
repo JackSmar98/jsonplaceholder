@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { usePosts } from '../contexto/PostsContext';
+import { addActivityToLocalStorage } from '../utils/activityLog.js';
 
 // (Los estilos pueden permanecer igual o los puedes mover a un .css)
 const aleatoriosContainerStyle = { /* ... */ };

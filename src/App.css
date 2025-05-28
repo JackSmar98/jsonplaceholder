@@ -1,42 +1,466 @@
+/* src/App.css */
+
+/* Reseteo Básico y Variables de Color Globales */
+:root {
+  --primary-color: #007bff; /* Azul primario */
+  --primary-hover-color: #0056b3;
+  --secondary-color: #6c757d; /* Gris secundario */
+  --secondary-hover-color: #545b62;
+  --danger-color: #dc3545;
+  --danger-hover-color: #c82333;
+  --success-color: #28a745;
+  --success-hover-color: #1e7e34;
+  
+  /* Colores base para tema claro (por defecto) */
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --card-bg-color: #ffffff;
+  --border-color: #dee2e6;
+  --link-color: var(--primary-color);
+  --header-bg-color: #343a40;
+  --header-text-color: #ffffff;
+
+  --font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+  --box-shadow-light: 0 2px 4px rgba(0,0,0,0.075);
+  --box-shadow-medium: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Estilos para el tema oscuro (se activarán con una clase en el body) */
+body.dark-theme {
+  --bg-color: #212529;
+  --text-color: #f8f9fa;
+  --card-bg-color: #343a40;
+  --border-color: #495057;
+  --link-color: #63a9ff; /* Un azul más claro para contraste en oscuro */
+  --header-bg-color: #212529; /* Un poco más oscuro o igual que el body oscuro */
+  --header-text-color: #f8f9fa;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans-serif);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem 2rem;
+}
+
+.App-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px; /* Bordes más redondeados */
+  box-shadow: var(--box-shadow-medium);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 0.75em;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+h1 { font-size: 2.2em; font-weight: 600; }
+h2 { font-size: 1.8em; font-weight: 600; }
+h3 { font-size: 1.4em; font-weight: 500; }
+
+p {
+  margin-bottom: 1em;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  text-decoration: underline;
+  color: var(--primary-hover-color);
+}
+body.dark-theme a:hover {
+  color: #82baff; /* Ajuste hover para tema oscuro */
+}
+
+/* --- Menú Principal --- */
+.main-menu {
+  background-color: var(--header-bg-color);
+  padding: 15px 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px 25px;
+  box-shadow: var(--box-shadow-light);
+  transition: background-color 0.3s ease;
+}
+
+.main-menu a,
+.main-menu span {
+  color: var(--header-text-color);
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out, color 0.3s ease;
+}
+.main-menu a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+}
+body.dark-theme .main-menu a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+.main-menu span { /* Para el "Hola, email" y separadores */
+  opacity: 0.8;
+}
+
+
+/* --- Botones Generales --- */
+button, .button-style { /* Clase genérica para links que parezcan botones */
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid transparent;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* Botón Primario */
+button.primary, .button-style.primary,
+.auth-form button[type="submit"], 
+.profile-form button[type="submit"],
+.main-menu button { /* Logout button */
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button.primary:hover, .button-style.primary:hover,
+.auth-form button[type="submit"]:hover, 
+.profile-form button[type="submit"]:hover,
+.main-menu button:hover {
+  background-color: var(--primary-hover-color);
+  border-color: var(--primary-hover-color);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Botón Secundario (ej. Cancelar) */
+button.secondary, .button-style.secondary,
+.profile-form button[type="button"] { /* Cancelar en perfil */
+  background-color: var(--secondary-color);
+  color: white;
+  border-color: var(--secondary-color);
+}
+button.secondary:hover, .button-style.secondary:hover,
+.profile-form button[type="button"]:hover {
+  background-color: var(--secondary-hover-color);
+  border-color: var(--secondary-hover-color);
 }
 
-.card {
-  padding: 2em;
+/* Botón Peligro (ej. Limpiar Historial) */
+button.danger, .button-style.danger {
+  background-color: var(--danger-color);
+  color: white;
+  border-color: var(--danger-color);
+}
+button.danger:hover, .button-style.danger:hover {
+  background-color: var(--danger-hover-color);
+  border-color: var(--danger-hover-color);
 }
 
-.read-the-docs {
-  color: #888;
+
+button:disabled {
+  background-color: #ccc !important; /* Importante para sobreescribir */
+  border-color: #ccc !important;
+  color: #666 !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
 }
+
+
+/* --- Formularios (Login, Registro, Perfil) --- */
+.auth-form, .profile-form {
+  max-width: 500px;
+  /* App-container ya provee fondo y sombra */
+  text-align: left;
+}
+.auth-form h2, .profile-form h2 {
+  text-align: center;
+  margin-bottom: 30px; /* Más espacio */
+  color: var(--primary-color);
+}
+.auth-form > div, .profile-form > div:not(:last-child) { /* Más espacio entre campos */
+  margin-bottom: 20px;
+}
+.auth-form label, .profile-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-color); /* Usa variable */
+  opacity: 0.9;
+}
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="password"],
+.profile-form input[type="text"],
+.profile-form input[type="date"],
+.profile-form input[type="tel"],
+.profile-form input[type="url"],
+textarea.comment-textarea { /* Añadido para el textarea de comentarios */
+  width: 100%;
+  padding: 12px 15px; /* Padding más generoso */
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color); /* Fondo igual al body para mejor contraste en modo oscuro */
+  color: var(--text-color);
+  border-radius: 6px; /* Bordes más redondeados */
+  box-sizing: border-box;
+  font-size: 1em;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+}
+.auth-form input:focus, 
+.profile-form input:focus,
+textarea.comment-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+.auth-form button[type="submit"], 
+.profile-form button[type="submit"] {
+  width: 100%;
+  margin-top: 10px; /* Separación del último campo */
+}
+.profile-form button[type="button"] { /* Cancelar */
+  width: 100%;
+  margin-top: 10px;
+}
+.auth-form div > a, .profile-form div > a { /* Para "Ya tienes cuenta?", etc. */
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+}
+
+
+/* --- Lista de Posts y Tarjetas --- */
+.posts-list {
+  list-style-type: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px; /* Un poco más de espacio */
+}
+.post-item { /* Estilo de tarjeta */
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px; /* Más redondeado */
+  padding: 20px 25px;
+  text-align: left;
+  box-shadow: var(--box-shadow-light);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
+}
+.post-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--box-shadow-medium);
+}
+.post-item h2, .post-item h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--primary-color);
+  font-size: 1.3em; /* Ajustar tamaño */
+  font-weight: 600;
+  text-align: left;
+}
+body.dark-theme .post-item h2, body.dark-theme .post-item h3 {
+    color: var(--link-color); /* Usar link-color del tema oscuro para títulos de tarjeta */
+}
+.post-item p {
+  margin-bottom: 15px;
+  font-size: 0.95em;
+}
+
+
+/* Barra de Búsqueda */
+.search-bar-container {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.search-bar-container input[type="text"] {
+  padding: 12px 15px;
+  width: 90%;
+  max-width: 600px;
+  font-size: 1em;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: var(--card-bg-color); /* Para que coincida con otros inputs */
+  color: var(--text-color);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+}
+.search-bar-container input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+
+/* Avatar en Perfil */
+.avatar-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+  margin: 0 auto 25px auto; /* Centrado y con margen inferior */
+  display: block;
+  box-shadow: var(--box-shadow-light);
+}
+.no-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: var(--border-color); /* Usar border-color para el fondo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-color); /* Texto más sutil */
+  border: 3px solid var(--border-color);
+  margin: 0 auto 25px auto;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+
+/* Botón de Favoritos en PostDetail y otros botones de acción */
+button.action-button {
+  padding: 8px 15px;
+  font-size: 0.9em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  border: 1px solid var(--primary-color);
+  background-color: transparent;
+  color: var(--primary-color);
+  margin-right: 10px;
+}
+button.action-button:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+button.action-button.active {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+}
+button.action-button.active:hover {
+  background-color: var(--success-hover-color);
+  border-color: var(--success-hover-color);
+}
+/* Botón de limpiar historial */
+.profile-form button.danger, .descubiertos-container button.danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+    color: white;
+    width: auto; /* Para que no ocupe todo el ancho si no es necesario */
+    padding: 10px 20px;
+}
+.profile-form button.danger:hover, .descubiertos-container button.danger:hover {
+    background-color: var(--danger-hover-color);
+    border-color: var(--danger-hover-color);
+}
+
+
+/* Sección de Comentarios en PostDetail */
+.comments-section {
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+.comment-form {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+textarea.comment-textarea { /* Hereda estilos de input pero puede tener más */
+  min-height: 100px;
+  margin-bottom: 10px;
+}
+/* Botón de enviar comentario ya usa .primary */
+
+.comment-list {
+  list-style: none;
+  padding: 0;
+}
+.comment-item {
+  border: 1px solid var(--border-color);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  background-color: var(--bg-color); /* Fondo sutilmente diferente */
+  text-align: left;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.comment-author {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+.comment-avatar-mini {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid var(--border-color);
+}
+.no-avatar-mini {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--border-color);
+    display: inline-flex; /* Para que se alinee con el texto */
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--secondary-color);
+    margin-right: 10px;
+    /* border: 1px solid var(--border-color); */
+}
+.comment-item p {
+  margin: 5px 0 10px 0; /* Ajustar márgenes del contenido del comentario */
+  font-size: 0.95em;
+}
+.comment-item small {
+  color: var(--secondary-color);
+  font-size: 0.8em;
+  transition: color 0.3s ease;
+}
+
+/* Actividad Reciente en Perfil */
+.activity-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+.activity-list
