@@ -1,61 +1,96 @@
-// App.jsx
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
-import './App.css'; // Puedes crear este archivo para estilos básicos
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import PostsList from './componentes/PostsList';
+import PostDetail from './componentes/PostDetail';
+import Login from './componentes/Login';
+import Registro from './componentes/Registro';
+import PerfilUsuario from './componentes/PerfilUsuario';
+import Favoritos from './componentes/Favoritos';
+import Aleatorios from './componentes/Aleatorios'; // <--- IMPORTA EL NUEVO COMPONENTE
+import { supabase } from './supabase.js';
+import './App.css';
+
+const Menu = ({ user, onLogout }) => {
+  return (
+    <nav className="main-menu">
+      <Link to="/">Lista de Posts</Link>
+      <span style={{ margin: '0 10px' }}>|</span>
+      <Link to="/aleatorios">Posts Aleatorios</Link> {/* <--- ENLACE A ALEATORIOS */}
+      <span style={{ margin: '0 10px' }}>|</span>
+      {user ? (
+        <>
+          <Link to="/favoritos">Mis Favoritos</Link>
+          <span style={{ margin: '0 10px' }}>|</span>
+          <Link to="/perfil">Mi Perfil</Link>
+          <span style={{ margin: '0 10px' }}>|</span>
+          <span>Hola, {user.email}</span>
+          <span style={{ margin: '0 10px' }}>|</span>
+          <button onClick={onLogout}>Cerrar Sesión</button>
+        </>
+      ) : (
+        <>
+          <Link to="/login">Login</Link>
+          <span style={{ margin: '0 10px' }}>|</span>
+          <Link to="/registro">Registro</Link>
+        </>
+      )}
+    </nav>
+  );
+};
 
 function App() {
-  const [posts, setPosts] = useState([]); // Estado para almacenar los posts
-  const [loading, setLoading] = useState(true); // Estado para manejar la carga
-  const [error, setError] = useState(null); // Estado para manejar errores
+  const [userSession, setUserSession] = useState(null);
+  const [loadingSession, setLoadingSession] = useState(true);
 
   useEffect(() => {
-    // Función para obtener los datos de la API
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setPosts(data.slice(0, 10)); // Guardamos solo los primeros 10 posts para el ejemplo
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        setPosts([]); // Limpiamos los posts en caso de error
-      } finally {
-        setLoading(false); // Finaliza la carga, ya sea con éxito o error
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUserSession(session);
+      setLoadingSession(false);
+    });
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserSession(session);
+    });
+    return () => {
+      if (authListener && authListener.subscription) {
+        authListener.subscription.unsubscribe();
       }
     };
+  }, []);
 
-    fetchPosts(); // Llamamos a la función al montar el componente
-  }, []); // El array vacío como segundo argumento asegura que useEffect se ejecute solo una vez (al montar)
+  const handleLogout = async () => { 
+    await supabase.auth.signOut();
+  };
 
-  // Renderizar estado de carga
-  if (loading) {
-    return <div className="App-container">Cargando posts...</div>;
+  if (loadingSession) {
+    return <div className="App-container" style={{ textAlign: 'center', marginTop: '50px' }}>Cargando sesión...</div>;
   }
 
-  // Renderizar estado de error
-  if (error) {
-    return <div className="App-container">Error al cargar los posts: {error}</div>;
-  }
-
-  // Renderizar los posts
   return (
-    <div className="App-container">
-      <h1>Lista de Posts</h1>
-      {posts.length > 0 ? (
-        <ul className="posts-list">
-          {posts.map(post => (
-            <li key={post.id} className="post-item">
-              <h2>{post.title}</h2>
-              <p>{post.body}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        !loading && <p>No se encontraron posts.</p> // Mensaje si no hay posts y no está cargando
-      )}
-    </div>
+    <Router>
+      <Menu user={userSession} onLogout={handleLogout} />
+      <div className="content-area" style={{ paddingTop: '20px' }}>
+        <Routes>
+          <Route path="/login" element={!userSession ? <Login /> : <Navigate to="/" replace />} />
+          <Route path="/registro" element={!userSession ? <Registro /> : <Navigate to="/" replace />} />
+          
+          <Route path="/" element={<PostsList />} />
+          <Route path="/post/:id" element={<PostDetail />} />
+          <Route path="/aleatorios" element={<Aleatorios />} /> {/* <--- NUEVA RUTA */}
+
+          <Route
+            path="/perfil"
+            element={userSession ? <PerfilUsuario /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/favoritos"
+            element={userSession ? <Favoritos /> : <Navigate to="/login" replace />}
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
